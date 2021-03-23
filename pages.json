@@ -1,0 +1,299 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/tabbar/index",
+			"style": {
+				"navigationBarBackgroundColor": "#001746",
+				"navigationBarTextStyle": "white",
+				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh": true,
+				"navigationStyle": "custom"
+			},
+			"usingComponents": {}
+		},
+		{
+			"path": "pages/tabbar/study",
+			"style": {
+				"navigationBarTitleText": "学习",
+				"enablePullDownRefresh": false
+			},
+			"usingComponents": {}
+		},
+		{
+			"path": "pages/tabbar/live",
+			"style": {
+				"navigationBarTitleText": "直播",
+				"enablePullDownRefresh": true
+			},
+			"usingComponents": {}
+		},
+		{
+			"path": "pages/tabbar/moments",
+			"style": {
+				"navigationBarTitleText": "发现",
+				"enablePullDownRefresh": true
+			},
+			"usingComponents": {}
+		},
+		{
+			"path": "pages/wallet/index",
+			"style": {
+				"navigationBarTitleText": "我的钱包",
+				// "navigationBarBackgroundColor": "#F25555",
+				// "navigationBarTextStyle": "white",
+				"enablePullDownRefresh": false,
+				"app-plus": { //app端特有属性
+					"titleNView": {
+						"buttons": [{ //右侧操作按钮样式定义,是以数组形式定义，可定义多个
+							"color": "#000000",
+							"float":"right",
+							"fontSize": "16px",
+							"text": "账单"
+							
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/recharge/index",
+			"style": {
+				"navigationBarTitleText": "充值"
+				// "enablePullDownRefresh": true
+			},
+			"usingComponents": {}
+		},
+		{
+			"path": "pages/withdrawal/index",
+			"style": {
+				"navigationBarTitleText": "提现"
+				// "enablePullDownRefresh": true
+			},
+			"usingComponents": {}
+		},
+		{
+			"path": "pages/myBill/index",
+			"style": {
+				"navigationBarTitleText": "账单明细",
+				"enablePullDownRefresh": true
+			},
+			"usingComponents": {}
+		},
+		{
+			"path": "pages/tabbar/user",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"enablePullDownRefresh": true
+			},
+			"usingComponents": {}
+		},
+		{
+			"path": "pages/comment",
+			"style": {
+				"navigationBarTitleText": "正文",
+				"enablePullDownRefresh": false
+			},
+			"usingComponents": {}
+		},
+		{
+			"path": "pages/login",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"navigationBarBackgroundColor": "#4ca8e7",
+				"navigationBarTextStyle": "white"
+			},
+			"app-plus": {
+				"titleNView": {
+					"autoBackButton": false
+				}
+			},
+			"usingComponents": {}
+		},
+		{
+			"path": "pages/register",
+			"style": {
+				"navigationBarTitleText": "注册",
+				"navigationBarBackgroundColor": "#4ca8e7",
+				"navigationBarTextStyle": "white"
+			},
+			"app-plus": {
+				"titleNView": {
+					"autoBackButton": false
+				}
+			},
+			"usingComponents": {}
+		}, {
+			"path": "pages/forget",
+			"style": {
+				"navigationBarTitleText": "忘记密码",
+				"navigationBarBackgroundColor": "#4ca8e7",
+				"navigationBarTextStyle": "white"
+			},
+			"app-plus": {
+				"titleNView": {
+					"autoBackButton": false
+				}
+			},
+			"usingComponents": {}
+		}, {
+			"path": "pages/order",
+			"style": {
+				"navigationBarTitleText": "我的订单",
+				"enablePullDownRefresh": true
+			}
+		}, {
+			"path": "pages/myfollow",
+			"style": {
+				"navigationBarTitleText": "我的关注"
+			}
+		}, {
+			"path": "pages/mycollect",
+			"style": {
+				"navigationBarTitleText": "我的收藏"
+			}
+		}, {
+			"path": "pages/myhours",
+			"style": {
+				"navigationBarTitleText": "学习时长"
+			}
+		}, {
+			"path": "pages/about",
+			"style": {
+				"navigationBarTitleText": "关于我们"
+			}
+		}, {
+			"path": "pages/teacher",
+			"style": {
+				"navigationBarTitleText": "导师直播"
+			}
+		}, {
+			"path": "pages/help",
+			"style": {
+				"navigationBarTitleText": "帮助与客服"
+			}
+		}, {
+			"path": "pages/detail",
+			"style": {
+				"navigationBarTitleText": "课程详情"
+			}
+		}, {
+			"path": "pages/orders",
+			"style": {
+				"navigationBarTitleText": "订单详情"
+			}
+		}, {
+			"path": "pages/xufei",
+			"style": {
+				"navigationBarTitleText": "续费会员"
+			}
+		}, {
+			"path": "pages/helps",
+			"style": {
+				"navigationBarTitleText": "帮助"
+			}
+		}, {
+			"path": "pages/living",
+			"style": {
+				"navigationBarTitleText": "直播详情"
+			}
+		}, {
+			"path": "pages/sendss",
+			"style": {
+				"navigationBarTitleText": "发说说"
+			}
+		},
+		// {
+		//           "path" : "pages/tui",
+		//          "style": {
+		//          	"navigationStyle": "custom"
+		//          }
+		//       },
+		{
+			"path": "pages/live_detail",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}, {
+			"path": "pages/classall",
+			"style": {
+				"navigationBarTitleText": "全部分类"
+			}
+		}, {
+			"path": "pages/teachers",
+			"style": {
+				"navigationBarTitleText": "商户列表"
+			}
+		}, {
+			"path": "pages/teacher_detail",
+			"style": {
+				"navigationBarTitleText": "商户详情",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/jingxuan",
+			"style": {
+				"navigationBarTitleText": "精选专区",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/profile",
+			"style": {
+				"navigationBarTitleText": "个人信息",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/search",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "洵子教育365",
+		"navigationBarBackgroundColor": "#fff",
+		"backgroundColor": "#fff"
+	},
+	"tabBar": {
+		"color": "#808080",
+		"selectedColor": "#4ca8e7",
+		"borderStyle": "black",
+		"backgroundColor": "#FFFFFF",
+		"list": [{
+				"pagePath": "pages/tabbar/index",
+				"iconPath": "static/tab/i1.png",
+				"selectedIconPath": "static/tab/i1_hl.png",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/tabbar/study",
+				"iconPath": "static/tab/i2.png",
+				"selectedIconPath": "static/tab/i2_hl.png",
+				"text": "学习"
+			},
+			{
+				"pagePath": "pages/tabbar/live",
+				"iconPath": "static/tab/i3.png",
+				"selectedIconPath": "static/tab/i3_hl.png",
+				"text": "直播"
+			},
+			{
+				"pagePath": "pages/tabbar/moments",
+				"iconPath": "static/tab/i4.png",
+				"selectedIconPath": "static/tab/i4_hl.png",
+				"text": "发现"
+			},
+			{
+				"pagePath": "pages/tabbar/user",
+				"iconPath": "static/tab/i5.png",
+				"selectedIconPath": "static/tab/i5_hl.png",
+				"text": "我的"
+			}
+		]
+	}
+}

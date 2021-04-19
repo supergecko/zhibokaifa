@@ -18,14 +18,14 @@
 			<view class="bottomWarpTitle" @click="openZdy()">自定义充值</view>
 
 			<view class="zdy">
-				<view style="width: 350rpx;line-height: 110rpx;font-size: 34rpx;text-align: center;">{{payNumber}}
+				<view style="width: 350rpx;line-height: 110rpx;font-size: 34rpx;text-align: center;">{{payZs}}元
 				</view>
 				<view>
 					<view style="font-size: 28rpx;color: #7A7A7A;margin-top:10rpx;">你将获得钻石</view>
 					<view style="display: flex;">
 						<image src="../../static/recharge/zs.png" style="width: 40rpx; height: 40rpx;margin-top: 8rpx;">
 						</image>
-						<view style="margin-top: 8rpx;margin-left: 10rpx;">{{payZs}}</view>
+						<view style="margin-top: 8rpx;margin-left: 10rpx;">{{payNumber}}</view>
 					</view>
 				</view>
 			</view>
@@ -50,7 +50,7 @@
 		</view>
 
 		<uni-popup ref="popup" type="dialog">
-			<uni-popup-dialog mode="input" message="自定义充值" :duration="2000" placeholder="充值金额" inputType="number"
+			<uni-popup-dialog mode="input" message="自定义充值" :duration="2000" placeholder="请输入充值钻石数量" inputType="number"
 				:before-close="true" @close="close" @confirm="confirm"></uni-popup-dialog>
 		</uni-popup>
 	</view>
@@ -88,10 +88,23 @@
 			this.init()
 		},
 		onLoad(e) {
-			this.balance = e.balance
+			this.getUser()
+			// this.balance = e.balance
 		},
 
 		methods: {
+			getUser(){
+				var uid = uni.getStorageSync('user')['id']
+				let data = {
+					uid : uid
+				}
+				this.$H.post('/user/member', data).then(res => {
+					console.log(res)
+					this.balance = res.datas.balance
+				}).catch(err => {
+					console.log(err);
+				})
+			},
 			init(){
 				uni.showLoading({
 					title: '加载中……'
@@ -109,7 +122,7 @@
 			payMoney() {
 				if (this.payNumber == 0) {
 					return uni.showToast({
-						title: '请选择充值金额',
+						title: '请选择充值钻石数量',
 						icon: 'none'
 					});
 				}
@@ -269,6 +282,8 @@
 			checkNumber(e, i) {
 				this.numberFlag = i
 				this.payNumber = e
+				console.log(e)
+				console.log(this.zsbl)
 				this.payZs = e * this.zsbl
 			},
 			// 自定义价格
@@ -292,12 +307,12 @@
 			confirm(done, value) {
 				if (!value) {
 					return uni.showToast({
-						title: '请输入要充值的金额',
+						title: '请输入要充值的钻石数量',
 						icon: 'none'
 					});
 				}
 				this.payNumber = value
-				this.payZs = value * 10
+				this.payZs = value * this.zsbl
 				done()
 			},
 			//下方勾选协议按钮

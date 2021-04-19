@@ -1,0 +1,489 @@
+<template>
+	<view class="page">
+		
+		<!-- <video class="flex-1" :src="src" autoplay :controls="false"></video> -->
+		<video  class="flex-1" :src="src" autoplay :controls="false" @error="videoError"></video>
+		<!-- 头部 -->
+		<view style="position: fixed;left: 0;right: 0;" :style="'top:'+statusBarHeight+'px'">
+			<!-- 个人信息|观看详细信息 -->
+			<view style="height: 80rpx;" class="px-2 flex justify-between align-center">
+				<view style="width: 325rpx;background-color: rgba(0,0,0,0.4);" class="flex rounded-circle">
+					<view class="p">
+						<image :src="liveHeadImg || '/static/tabbar/min.png'" style="width: 70rpx;height: 70rpx;"
+							class="rounded-circle"></image>
+					</view>
+					<view class="flex-1 flex flex-column justify-center">
+						<text class="text-white font">{{ liveInfo.title }}</text>
+						<view style="display: flex;flex-direction: row;">
+							<text class="text-white font-sm" style="font-size: 24rpx;">主播id:</text>
+							<text class="text-white font-sm" style="font-size: 24rpx;">{{id}}</text>
+						</view>
+					</view>
+					<view class="p" @click="followLive()">
+						<view class="rounded-circle flex align-center justify-center" style="width: 70rpx;height: 70rpx;background-color: #88BDE2;">
+							<text class="text-white" v-if="!isFollow">+</text>
+							<image src="../../static/gift/check.png" style="width: 40rpx;height: 40rpx;" v-if="isFollow"></image>
+						</view>
+					</view>
+				</view>
+
+				<view style="width: 325rpx;background-color: rgba(0,0,0,0.4);" class="flex rounded-circle">
+					<!-- 实时在线观看用户情况 -->
+					<scroll-view scroll-x="true" class="flex-1 flex">
+						<view class="p" v-for="(item,index) in list" :key="index">
+							<image :src="item.head_img || '/static/tabbar/min.png'" style="width: 70rpx;height: 70rpx;"
+								class="rounded-circle"></image>
+						</view>
+					</scroll-view>
+					<view class="p">
+						<view class="rounded-circle flex align-center justify-center"
+							style="width: 70rpx;height: 70rpx;background-color: #88BDE2;" >
+							<!-- 实时在线观看人数 -->
+							<text class="text-white font-sm">{{ list.length }}</text>
+						</view>
+					</view>
+				</view>
+			</view>
+			<!-- 收到的钻石 -->
+			<!-- <view style="height: 80rpx;" class="px-2 my-2">
+				<view style="width: 325rpx;background-color: rgba(0,0,0,0.4);" class="flex rounded-circle align-center">
+					<view class="p">
+						<text class="text-warning">金币</text>
+					</view>
+					<view class="flex-1 flex flex-column justify-center">
+						<text class="text-white font">{{ detail.coin }}</text>
+					</view>
+				</view>
+			</view> -->
+			<!-- 收到礼物 -->
+			<view style="height: 200rpx;"></view>
+			<f-gift ref="gift"></f-gift>
+		</view>
+		<!-- 弹幕 -->
+		<f-danmu ref="danmu"></f-danmu>
+
+		<!-- 底部 -->
+		<view style="position: fixed;left: 0;bottom: 0;right: 0;height: 120rpx;"
+			class="flex align-center justify-between">
+			<view class="px-2">
+				<view class="btn px-3" @click="openInput">
+					<text class="text-white font">说点什么...</text>
+				</view>
+			</view>
+			<view class="flex align-center">
+				<view class="btn btn-icon" @click="openCoin">
+					<text class="iconfont text-white" style="font-size: 40px;">&#xe633;</text>
+				</view>
+				<view class="btn btn-icon" @click="openGift">
+					<!-- <text class="iconfont">&#xe67c;</text> -->
+					<image src="../../static/gift/giftBtn.png" style="width: 84rpx;height: 84rpx;" class="rounded-circle"></image>
+				</view>
+				<!-- <view class="btn btn-icon">
+					<text class="iconfont text-white">&#xe7cd;</text>
+				</view> -->
+				<view class="btn btn-icon" @click="back">
+					<text class="iconfont text-white">&#xe607;</text>
+				</view>
+			</view>
+		</view>
+
+		<!-- 输入框弹出层 -->
+		<uni-popup type="bottom" ref="input">
+			<view class="bg-white flex align-center px-3" style="height: 120rpx;">
+				<input type="text" v-model="content" class="border rounded flex-1 px-3 font-md" placeholder="说点什么..."
+					style="height: 80rpx;" />
+				<view class="flex align-center justify-center py-2 px-2 ml-3 rounded" @click="submit"
+					:class="content === '' ? 'bg-main-disabled' : 'bg-main'">
+					<text class="font text-white">发送</text>
+				</view>
+			</view>
+		</uni-popup>
+
+		<!-- 送礼物弹出层 -->
+		<uni-popup type="bottom" ref="giftPopup">
+			<view class="bg-black" style="width: 750rpx;height: 550rpx;">
+				<view style="height: 100rpx;" class="flex justify-between align-center">
+						<text class="text-blue font-md ml-3" style="margin: 0 auto">礼物</text>
+					
+					<view class="flex align-center justify-center" style="width: 100rpx;height: 100rpx;"
+						@click="closeGift">
+						<text class="iconfont">&#xe607;</text>
+					</view>
+				</view>
+				<swiper :indicator-dots="true" :duration="500" style="height: 350rpx;" class="border-bottom border-top">
+					<swiper-item>
+						<view class="flex flex-wrap">
+							<view style="width: 187.5rpx;height: 175rpx;"
+								class="flex flex-column justify-center align-center" v-for="(item,index) in gifts"
+								:key="index" :class="giftActiveId === item.id ? 'border' : ''"
+								@click="giftActiveId = item.id">
+								<image :src="item.photo" style="width: 80rpx;height: 80rpx;"></image>
+								<view class="mt-1 gittItem">
+									<text class="text-warning font mr-1" style="color: #FFFFFF;">{{item.gift_name}}</text>
+									<view style="display: flex;flex-direction: row;">
+										<view>
+											<image src="../../static/gift/zs.png" style="width: 32rpx;height: 32rpx;"></image>
+										</view>				
+										<view>
+											<text class="text-secondary font">{{item.diamond_price_one}}钻石</text>
+										</view>
+									</view>
+								</view>
+							</view>
+						</view>
+					</swiper-item>
+				</swiper>
+				<view style="height: 100rpx;" class="flex align-center justify-end">
+					<view class="flex align-center justify-center py-2 px-2 mr-3 rounded bg-warning" @click="openCoin">
+						<text class="font">充值</text>
+					</view>
+					<view class="flex align-center justify-center py-2 px-2 mr-3 rounded bg-blue" @click="sendGift">
+						<text class="font text-white">赠送</text>
+					</view>
+				</view>
+			</view>
+		</uni-popup>
+
+	</view>
+</template>
+
+<script>
+	import fGift from '@/components/live/f-gift.vue';
+	import fDanmu from '@/components/live/f-danmu.vue';
+	import uniPopup from '@/components/uni-ui/uni-popup/uni-popup.vue';
+	import $H from '@/common/request.js';
+	import $C from '@/common/config.js';
+	import {
+		mapState
+	} from 'vuex'
+
+	export default {
+		components: {
+			fGift,
+			fDanmu,
+			uniPopup
+		},
+		data() {
+			return {
+				id: 0,//直播间主播的id
+				sign: "",
+				statusBarHeight: 0,
+				content: "",
+				gifts: [],
+				giftActiveId: 0,
+				// 在线用户列表
+				list: [],
+				liveInfo:{},//直播间相关信息
+				src:'',
+				isFollow: false ,//是否关注
+				liveHeadImg:'',//主播头像
+			}
+		},
+		onLoad(e) {
+			this.id = e.id //直播间主播id
+			console.log(this.id)
+			let res = uni.getSystemInfoSync()
+			this.statusBarHeight = res.statusBarHeight
+			let data = {
+				user_id:this.id
+			}
+			this.teacherInfo()
+			$H.post('/live/tuila', data).then(res => {
+				this.liveInfo = res.data
+				this.liveInfo.photo = $C.imageUrl + this.liveInfo.photo
+				this.src = res.data.la_url
+				this.getFollow()
+				this.$store.dispatch('setType','user_')
+				this.$store.dispatch('setLiveId',res.data.id)//直播间分组信息
+				this.$store.dispatch('connectWebSocket')
+			}).catch(err => {
+				console.log(err);
+			})
+			//监听全局事件
+			uni.$on('live', this.handleLiveEvent)
+			this.getGifts()
+		},
+		onReady() {
+			
+		},
+		//销毁的时候
+		destroyed() {
+			// 离开直播间
+			this.joinOrLeaveLive('leave')
+			// 移除全局事件
+			uni.$off('live', this.handleLiveEvent)
+		},
+		computed: {
+			//引入store中的socket和token
+			...mapState({
+				socket: state => state.socket,
+				token: state => state.token,
+				type: state=> state.type,
+			})
+		},
+		methods: {
+			//关注取消关注
+			followLive(){
+				let data = {
+					uid:uni.getStorageSync('user').id,
+					liveid:this.liveInfo.id
+				}
+				$H.post('/user/f_live', data).then(res => {
+					console.log(res)
+					if (res.msg == '关注成功'){
+						this.isFollow = true
+					} else {
+						this.isFollow = false
+					}
+				}).catch(err => {
+					console.log(err)
+				})
+			},
+			//直播间相关
+			teacherInfo(){
+				let data = {
+					user_id:this.id,
+				}
+				$H.post('/live/teacher_info', data).then(res => {
+					console.log('直播间相关信息')
+					console.log(res)
+					this.liveHeadImg = $C.imageUrl + res.datas.head_img
+				}).catch(err => {
+					console.log(err)
+				})
+			},
+			//是否关注
+			getFollow(){
+				let data = {
+					uid:uni.getStorageSync('user').id,
+					liveid:this.liveInfo.id
+				}
+				console.log(data)
+				$H.post('/user/is_focus', data).then(res => {
+					console.log(res.data.status)
+					
+					if (res.data.status == '0'){
+						this.isFollow = false
+					} else {
+						this.isFollow = true
+					}
+				}).catch(err => {
+					console.log(err)
+				})
+			},
+			handleLiveEvent(e) {
+				let d = e.data
+				switch (e.type) {
+					case 'online':
+						//需要后台给个参数来判断是否是加入直播间这个数组
+						console.log('监听到了 在线人数')
+						console.log(d)
+						this.list = d.message.online_users
+						break;
+					case 'comment':
+					console.log(d)
+						this.$refs.danmu.send({
+							id: d.id,
+							name: d.username,
+							content: d.message.conten,
+							liveid: '',
+							userId: d.userid
+						})
+						this.content = ''
+						this.$refs.input.close()
+						break;
+					case 'system':
+						this.$refs.danmu.upSystemContent(d.message.content)
+						break;
+					case 'gift':
+						console.log(d)
+						this.$refs.gift.send({
+							avatar: d.user_head_img,
+							username: d.username,
+							gift_name: d.message.name,
+							gift_image: d.message.photo,
+							num: d.message.gift_number
+						})
+						this.closeGift()
+						break;
+					default:
+						break;
+				}
+			},
+			// 加入或离开直播间
+			joinOrLeaveLive(type) {
+				if (type == "leave"){
+					this.$store.dispatch('closeWebSocket')
+				}
+			},
+			//获取礼物
+			getGifts(){
+				let data = {}
+				$H.post('/gift/gift_lists', data).then(res => {
+					console.log(res.data)
+					this.gifts = res.data
+				}).catch(err => {
+					console.log(err)
+				})
+			},
+			//送礼
+			sendGift() {
+				if (this.giftActiveId === 0) {
+					return uni.showToast({
+						title: '请选择要赠送的礼物',
+						icon: 'none'
+					});
+				}
+				let index = this.gifts.findIndex(item => item.id === this.giftActiveId)
+				if (index === -1) {
+					return
+				}
+				
+				let g = this.gifts[index]
+				let data = {
+					user_id:uni.getStorageSync('user').id,
+					teacher_id:this.id,
+					gift_id:g.id,
+					gift_num:1
+				}
+				$H.post('/gift/song_gift', data).then(res => {
+					console.log(res)
+					if (res.code ==1){
+						uni.showToast({
+						    title: '赠送成功',
+						    icon: 'none'
+						});
+						
+						this.$store.state.socket.send({
+							data: JSON.stringify({
+								type:"2",
+								userid:uni.getStorageSync('user').id,
+								liveid:this.liveInfo.id,
+								username:uni.getStorageSync('user').nickname,
+								user_head_img:$C.imageUrl+ uni.getStorageSync('user').head_img,
+								message:{
+									gift_id:g.id,
+									gift_number:"1",
+									photo:g.photo,
+									name:g.gift_name
+								}
+							}),
+							success: res => {
+								// console.log(res)
+								return;
+							},
+							fail: err => {
+								// 未连接打开websocket连接
+								// console.log(err)
+							}
+						})
+					} else if (res.code==5) {
+						uni.showToast({
+						    title: res.msg,
+						    icon: 'none'
+						});
+					}
+				}).catch(err => {
+					console.log(err)
+				})
+				
+			},
+			//回退
+			back() {
+				uni.navigateBack({
+					delta: 1
+				});
+			},
+			openGift() {
+				this.$refs.giftPopup.open()
+			},
+			closeGift() {
+				this.$refs.giftPopup.close()
+			},
+			
+			//是否有权限打开发言框
+			openInput() {
+				let data = {
+					user_id:uni.getStorageSync('user').id,
+					teacher_id:this.id,
+				}
+				$H.post('/live/can_sendmsg', data).then(res => {
+					if (res.status == "2") {
+						console.log(res)
+						this.$refs.input.open()
+					} else {
+						uni.showToast({
+							title: '您被主播禁言啦 请稍后再重试',
+							icon: 'none'
+						});
+					}
+				}).catch(err => {
+					console.log(err)
+				})
+				
+			},
+			// 发送弹幕
+			submit() {
+				if (this.content === '') {
+					return uni.showToast({
+						title: '评论内容不能为空',
+						icon: 'none'
+					});
+				}
+				this.$store.state.socket.send({
+					data: JSON.stringify({
+						type:"1",
+						userid:uni.getStorageSync('user').id,
+						liveid:this.liveInfo.id,
+						username:uni.getStorageSync('user').nickname,
+						user_head_img:$C.imageUrl+ uni.getStorageSync('user').head_img,
+						message:{
+							conten:this.content
+						}
+					}),
+					success: res => {
+						console.log(res)
+						return;
+					},
+					fail: err => {
+						// 未连接打开websocket连接
+						console.log(err)
+					}
+				})
+			},
+			openCoin() {
+				uni.navigateTo({
+					url: '../recharge/index'
+				});
+			},
+			videoError(e){
+				console.error('拉流失败:', e)
+			}
+
+		}
+	}
+</script>
+
+<style>
+	.page {
+		flex: 1;
+	}
+
+	.btn {
+		height: 80rpx;
+		border-radius: 100rpx;
+		background-color: rgba(255, 255, 255, 0.12);
+		align-items: center;
+		justify-content: center;
+	}
+
+	.btn-icon {
+		width: 80rpx;
+		margin-right: 20rpx;
+	}
+	.gittItem{
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+	}
+</style>

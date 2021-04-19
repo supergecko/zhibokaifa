@@ -1,19 +1,29 @@
 <template>
 	<view>
-		<view class="" v-if="list == null" style="color: #6e6e6e;margin: 40rpx;">空空如也...</view>
+		<view class="" v-if="list.length==0" style="color: #6e6e6e;margin: 40rpx;text-align: center;">空空如也...</view>
 		<view class="olist" v-else>
-			<view class="part" v-for="(item, index) in list" :key="index" @click="toDetail(item.goods_id)">
+			<!-- <view class="part" v-for="(item, index) in list" :key="index" @click="toDetail(item.goods_id)">
 				<view class="imgbox">
-				<image :src="item.head_img" mode="scaleToFill" style="width:210rpx ;height: 260rpx;border-radius: 20rpx;"></image>
+				<image :src="item.photo" mode="scaleToFill" style="width:210rpx ;height: 260rpx;border-radius: 20rpx;"></image>
 				</view>
 				<view class="right">
-					<view class="name">{{item.nickname}}</view>
-					<view class="teacher" v-for="(items,index) in item.info">{{items}}</view>
+					<view class="name">{{item.title}}</view>
+					<view class="teacher" v-for="(items,index) in item.info" :key="index">{{items}}</view>
 					<view class="fb">
                         <view></view>
-						<!-- <view class="lesson"><image src="../static/time.png"></image>{{item.lesson}}课时</view> -->
+						<view class="lesson"><image src="../static/time.png"></image>{{item.lesson}}课时</view>
 						<view class="read flex" @click.stop="cancel(item.id)"><image src="../static/collect_hl.png"></image>取消关注</view>
 					</view>
+				</view>
+			</view> -->
+			
+			<view class="part" v-for="(item, index) in list" :key="index" @click="toDetail(item.goods_id)">
+				<view class="imgbox">
+					<image :src="item.photo" mode="scaleToFill" style="width:160rpx ;height: 160rpx;border-radius: 20rpx;"></image>
+				</view>
+				<view class="name">{{item.title}}</view>
+				<view class="fb" @click.stop="cancel(item.id)">
+					<view class="read flex" ><image src="../static/collect_hl.png"></image>取消关注</view>
 				</view>
 			</view>
 		</view>
@@ -60,29 +70,19 @@
 			// 	});
 			// }
 			// #endif
-			uni.getStorage({
-				key:'user',
-				success(res) {
-					that.user_id = res.data.id
-				}
-			})
 			that.getData()
 		},
 		methods: {
 			getData(){
-				var user=uni.getStorageSync('user')
-				var that =this
-				uni.request({
-					url:that.REQUEST_URL + 'index.php/api/user/mycollect',
-					method:"POST",
-					data:{
-						uid:user.id,
-						type:2
-					},
-					success(res) {
-						console.log(res)
-						that.list = res.data.datas
-					}
+				let data = {
+					uid:uni.getStorageSync('user').id,
+					type:2
+				}
+				this.$H.post('/user/mycollect', data).then(res => {
+					console.log(res.datas)
+					this.list = res.datas
+				}).catch(err => {
+					console.log(err)
 				})
 			},
 			toDetail(id){
@@ -92,22 +92,15 @@
 				})
 			},
 			cancel(id){
-				var that =this
-				console.log(id)
-				uni.request({
-					url:that.REQUEST_URL + 'index.php/api/collect/cancel_collect',
-					method:'POST',
-					data:{
-						id:id
-					},
-					success(res) {
-						console.log(res)
-						uni.showToast({
-							title:res.data.msg
-						})
-						that.getData()
-						
-					}
+				let data = {
+					uid:uni.getStorageSync('user').id,
+					liveid:id
+				}
+				this.$H.post('/user/f_live', data).then(res => {
+					console.log(res)
+					this.getData()
+				}).catch(err => {
+					console.log(err)
 				})
 			}
 		}
@@ -117,16 +110,18 @@
 <style>
 	.olist{
 		width: 690rpx;
-		margin: 20rpx auto;
+		margin: 0 auto;
 	}
 	.part{
 		display: flex;
-		margin-bottom: 30rpx;
-		padding-bottom: 20rpx;
 		border-bottom: 1rpx solid #cbcbcb;
+		justify-content: space-around;
+		align-items: center;
+		padding-top: 20rpx;
+		padding-bottom: 20rpx;
 	}
 	.part .imgbox{
-		height: 300rpx;
+		height: 160rpx;
 		margin-right: 26rpx;
 		border-radius: 12rpx;
 		overflow: hidden;

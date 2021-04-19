@@ -12,7 +12,7 @@
 				</view>
 				<view class="orderNumber">{{item.symbol}}{{item.num}}钻石</view>
 				<view class="orderStatus">
-					成功
+					{{item.pay_type==1? '支付宝' : '微信'}}
 				</view>
 			</view>
 			<view style="color: rgb(136, 136, 136);margin-top: 20rpx;text-align: center;" v-if="czArr.length==0">--暂无数据--</view>
@@ -39,6 +39,9 @@
 					<view class="orderTime">{{item.add_time}}</view>
 				</view>
 				<view class="orderNumber orderStatusFaile">{{item.symbol}}{{item.num}}钻石</view>
+				<view class="orderStatus orderStatusFaile">
+					{{item.pay_type==1 ? '支付宝' : item.pay_type== 2 ? '微信' :'余额'}}
+				</view>
 			</view>
 			<view style="color: rgb(136, 136, 136);margin-top: 20rpx;text-align: center;"v-if="xfArr.length==0">--暂无数据--</view>
 		</view>

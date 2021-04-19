@@ -4,8 +4,8 @@ export default {
 	*/
 	
 	baseUrl:"https://live.91banse.cn/public/index.php",
-	socketUrl:"http://liveapi2.dishait.cn",
-	imageUrl:"http://liveapi2.dishait.cn",
+	socketUrl:"wss://live.91banse.cn/wss",//socketUrl
+	imageUrl:"https://live.91banse.cn/public/uploads/face/",
 	
 	// 拉流前缀
 	livePlayBaseUrl:"https://live.91banse.cn:23481",

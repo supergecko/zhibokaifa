@@ -53,10 +53,10 @@ export default {
                     // 服务端失败
                     if(result.statusCode !== 200){
                         if (options.toast !== false) {
-                            uni.showToast({
-                                title: result.data.data || '服务端失败',
-                                icon: 'none'
-                            });
+                            // uni.showToast({
+                            //     title: result.data.data || '服务端失败',
+                            //     icon: 'none'
+                            // });
                         }
 						// token不合法，直接退出登录
 						if(result.data.data === 'Token 令牌不合法!'){
@@ -102,21 +102,23 @@ export default {
 	upload(url,data,onProgress = false){
 		return new Promise((result,reject)=>{
 			// 上传
-			let token = uni.getStorageSync('token')
-			if (!token) {
-			    uni.showToast({ title: '请先登录', icon: 'none' });
-			    // token不存在时跳转
-			    return uni.reLaunch({
-			        url: '/pages/login/login',
-			    });
-			}
-			
+			// let token = uni.getStorageSync('token')
+			// if (!token) {
+			//     uni.showToast({ title: '请先登录', icon: 'none' });
+			//     // token不存在时跳转
+			//     return uni.reLaunch({
+			//         url: '/pages/login/login',
+			//     });
+			// }
 			const uploadTask = uni.uploadFile({
 				url:this.common.baseUrl + url,
 				filePath:data.filePath,
-				name:data.name || "files",
-				header:{ token },
-				formData:data.formData || {},
+				name:data.name || "file",
+				// header:{ token },
+				// formData:data.formData || {},
+				formData: {
+				    'user': 'test'
+				},
 				success: (res) => {
 					if(res.statusCode !== 200){
 						result(false)
@@ -126,7 +128,8 @@ export default {
 						});
 					}
 					let message = JSON.parse(res.data)
-					result(message.data);
+					result(message);
+					console.log(message)
 				},
 				fail: (err) => {
 					console.log(err);

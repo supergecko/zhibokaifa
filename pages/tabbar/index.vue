@@ -1,18 +1,20 @@
 <template>
-	<view class="content" >
-		<view class="userNav" :class="ischange?'slow':'font000'" :style="{background:ischange?nowColor:'#fff'}">首页</view>
+	<view class="content">
+		<view class="userNav" :class="ischange?'slow':'font000'" :style="{background:ischange?nowColor:'#fff'}">首页
+		</view>
 		<view style="height: 88rpx;"></view>
 		<view class="bgtop" style="">
 			<view class="bgcolor" :class="ischange?'slow':''" :style="{background:nowColor}"></view>
-			<view class="header" >
+			<view class="header">
 				<view class="search flex">
 					<image src="../../static/search.png"></image>
 					<input type="text" @confirm="search" confirm-type="搜索" />
 				</view>
 			</view>
-			
+
 			<view class="banner">
-				<swiper @change="bannChange" class="swiper" :autoplay="true" :interval="4000" :duration="1000" :circular="true">
+				<swiper @change="bannChange" class="swiper" :autoplay="true" :interval="4000" :duration="1000"
+					:circular="true">
 					<swiper-item v-for="(item, index) in banners" :key="index">
 						<!-- <image :src="item.img.replace('\\','/')"></image> -->
 						<image :src="item.photo"></image>
@@ -25,17 +27,18 @@
 				<image :src="item.photo"></image>
 				<view class="text">{{item.category_name}}</view>
 			</view>
-			<view class="icon"  @click="toclassall()">
+			<view class="icon" @click="toclassall()">
 				<image src="../../static/44.png"></image>
 				<view class="text">全部分类</view>
 			</view>
 		</view>
-		<view  class="livebann imgbox" style=" width: 90%;margin: 0 auto;">
+		<view class="livebann imgbox" style=" width: 90%;margin: 0 auto;">
 			<image v-if="zhuanqu.length == 0"></image>
-			<image v-else @click="toDetail(zhuanqu[0].id)" style="width: 100%;" mode="widthFix" :src="zhuanqu[0].duli_images"></image>
+			<image v-else @click="toDetail(zhuanqu[0].id)" style="width: 100%;" mode="widthFix"
+				:src="zhuanqu[0].duli_images"></image>
 		</view>
-		<view class="lessonlist" >
-<!-- 			<view style="margin:10px 20px;height:40px;padding-top: 10px;">
+		<view class="lessonlist">
+			<!-- 			<view style="margin:10px 20px;height:40px;padding-top: 10px;">
 				<text style="font-size: 19px;font-weight: bold;">直播</text>
 				<view class="" style="float: right;margin-top: 10px;">
 					<image style="width: 15px;height:15px;" src="/static/00.png" mode=""></image>
@@ -48,43 +51,55 @@
 			<view class="tit" style="margin-left: 20px;padding-top: 10px;position: relative;">
 				<view class="" style="line-height:60rpx ;">
 					直播
-					<view  style="width: 32rpx;height:6rpx;background:#3d94fe;margin-bottom:20px;margin-left: 10px;"></view>
+					<view style="width: 32rpx;height:6rpx;background:#3d94fe;margin-bottom:20px;margin-left: 10px;">
+					</view>
 				</view>
-			<navigator open-type="switchTab" url="/pages/tabbar/live" class="text" style="position: absolute;right: 18px;top: 17px;" >更多
-			<image style="width: 36rpx;height: 36rpx;" src="/static/00.png"></image>
-			</navigator></view>
-        <view style="margin:0 20px;">
-               <scroll-view  scroll-x="true" style="white-space: nowrap;"  >
-                   <view id="demo1" style="width: 280rpx;height:280rpx;display: inline-block;padding:4px;" v-for="(item, index) in zhibo" >
-					   <view class=""@click="Tozhibo(item.id)" :style="{backgroundImage:'url('+src+item.photo+')'}" style="border-radius: 10px;width: 280rpx;height:280rpx;background-size: 280rpx 280rpx;position: relative;">
-					   	<view style="" class="positext">{{item.title}}</view>
-					   </view>
+				<navigator open-type="switchTab" url="/pages/tabbar/live" class="text"
+					style="position: absolute;right: 18px;top: 17px;">更多
+					<image style="width: 36rpx;height: 36rpx;" src="/static/00.png"></image>
+				</navigator>
+			</view>
+			<view style="margin:0 20px;">
+				<scroll-view scroll-x="true" style="white-space: nowrap;">
+					<view id="demo1" style="width: 280rpx;height:280rpx;display: inline-block;padding:4px;"
+						v-for="(item, index) in zhibo" :key="index">
+						<view class="" @click="Tozhibo(item.uid)" :style="{backgroundImage:'url('+src+item.photo+')'}"
+							style="border-radius: 10px;width: 280rpx;height:280rpx;background-size: 280rpx 280rpx;position: relative;">
+							<view style="" class="positext">{{item.title}}</view>
+						</view>
 						<!-- <image style="width: 150px;height:150px;border-radius: 10px;" :src="src+item.photo"@click="Tozhibo(item.id)" ></image> -->
 					</view>
-                </scroll-view>
-            </view>
+				</scroll-view>
+			</view>
 		</view>
 		<view class="lessonlist">
-			<view class="tit" style="margin-left: 20px;position: relative;">商户专区<navigator open-type="navigate" url="/pages/teachers" class="text" >更多
-			<image style="width: 36rpx;height: 36rpx;" src="/static/00.png"></image>
-			</navigator></view>
-			<view class="olist">
-			<view  style="padding-bottom:10px"  v-if="tuijian_daka.length != 0">
-				<image :src="tuijian_daka[0].tj_images" style="width: 100%;" mode="widthFix" @click="toTeacher(tuijian_daka[0].id)"></image>
-				<view style="height: 40px;padding-left:20px;margin-top: 5px;">
-					<view style="font-size: 16px;color:#805B32">{{tuijian_daka[0].nickname}}商户</view>
-					<view style="font-size: 14px;color: #7A7A7A;">{{tuijian_daka[0].info}}</view>
-				</view>
+			<view class="tit" style="margin-left: 20px;position: relative;">商户专区<navigator open-type="navigate"
+					url="/pages/teachers" class="text">更多
+					<image style="width: 36rpx;height: 36rpx;" src="/static/00.png"></image>
+				</navigator>
 			</view>
+			<view class="olist">
+				<view style="padding-bottom:10px" v-if="tuijian_daka.length != 0">
+					<image :src="tuijian_daka[0].tj_images" style="width: 100%;" mode="widthFix"
+						@click="toTeacher(tuijian_daka[0].id)"></image>
+					<view style="height: 40px;padding-left:20px;margin-top: 5px;">
+						<view style="font-size: 16px;color:#805B32">{{tuijian_daka[0].nickname}}商户</view>
+						<view style="font-size: 14px;color: #7A7A7A;">{{tuijian_daka[0].info}}</view>
+					</view>
+				</view>
 			</view>
 			<view style="background: #f4f4f4;width: 100%;height:5px;"></view>
 			<view class="olist">
 				<view class="part" v-for="(item, index) in daka" :key="index" @click="toTeacher(item.id)">
-					<view class="imgbox" style="width: 210rpx;height:260rpx"><image mode="scaleToFill" :src="item.head_img"></image></view>
+					<view class="imgbox" style="width: 210rpx;height:260rpx">
+						<image mode="scaleToFill" :src="item.head_img"></image>
+					</view>
 					<view class="right">
-						<view class="name" style="font-size: 18px;color: #282828;font-weight: bold;">{{item.nickname}}</view>
-						<view class="teacher" style=" 14px;color:#6e6e6e" v-for="(items,index) in item.info">{{items}}</view>
-<!-- 						<view class="fb" >
+						<view class="name" style="font-size: 18px;color: #282828;font-weight: bold;">{{item.nickname}}
+						</view>
+						<view class="teacher" style=" 14px;color:#6e6e6e" v-for="(items,index) in item.info" :key="index">{{items}}
+						</view>
+						<!-- 						<view class="fb" >
 							<view class="lesson" style="font-size: 14px;color:#7a7a7a">
 								{{item.goods_name}}课时</view>
 						</view> -->
@@ -93,118 +108,168 @@
 				</view>
 			</view>
 			<view class="lessonlist">
-				<view class="tit" style="padding-left: 20px;background:#f4f4f4;position: relative;">精品专区<navigator open-type="navigate" url="/pages/jingxuan" class="text" >更多
-				<image style="width: 36rpx;height: 36rpx;" src="/static/00.png"></image>
-				</navigator></view>
-			<view style="padding:40rpx;">
-				<scroll-view  scroll-x="true" style="white-space: nowrap;overflow: hidden;"  >
-					<view v-for="(item,index) in jingxuan " style="width:50%;height: 187rpx;margin-right: 10px;display: inline-block;">
-						<image style="width:100%;height: 187rpx;margin-right: 10px;" mode="scaleToFill" :src="item.photo"@click="toDetail(item.id)" ></image>
-					</view>
-				</scroll-view>
-			</view>
+				<view class="tit" style="padding-left: 20px;background:#f4f4f4;position: relative;">精品专区<navigator
+						open-type="navigate" url="/pages/jingxuan" class="text">更多
+						<image style="width: 36rpx;height: 36rpx;" src="/static/00.png"></image>
+					</navigator>
+				</view>
+				<view style="padding:40rpx;">
+					<scroll-view scroll-x="true" style="white-space: nowrap;overflow: hidden;">
+						<view v-for="(item,index) in jingxuan " :key="index"
+							style="width:50%;height: 187rpx;margin-right: 10px;display: inline-block;">
+							<image style="width:100%;height: 187rpx;margin-right: 10px;" mode="scaleToFill"
+								:src="item.photo" @click="toDetail(item.id)"></image>
+						</view>
+					</scroll-view>
+				</view>
 			</view>
 			<view class="lessonlist">
-				<view class="tit" style="padding-left: 20px;background:#f4f4f4;position: relative;">大咖课堂<view @click="toStudy" class="text" >更多
-				<image style="width: 36rpx;height: 36rpx;" src="/static/00.png"></image>
-				</view></view>
-			<view class="olist">
-				<view class="part" v-for="(item, index) in shops" :key="index" @click="toDetail1(item.id)">
-					<view class="imgbox" style="height:210rpx"><image mode="scaleToFill" :src="item.photo"></image></view>
-					<view class="right">
-						<text class="name" style=" font-size: 16px;color: #282828;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{{item.title}}</text>
-						<view class="teacher" style="font-size: 14px;color:#6e6e6e;line-height: 80rpx;">{{item.nickname}}</view>
-						<view class="fb">
-							<view class="lesson" style="font-size: 14px;color: #7a7a7a;"><image src="../../static/time.png"></image>{{item.count}}课时</view>
-							<!-- <view class="read">{{item.read}}人阅读</view> -->
+				<view class="tit" style="padding-left: 20px;background:#f4f4f4;position: relative;">大咖课堂<view
+						@click="toStudy" class="text">更多
+						<image style="width: 36rpx;height: 36rpx;" src="/static/00.png"></image>
+					</view>
+				</view>
+				<view class="olist">
+					<view class="part" v-for="(item, index) in shops" :key="index" @click="toDetail1(item.id)">
+						<view class="imgbox" style="height:210rpx">
+							<image mode="scaleToFill" :src="item.photo"></image>
+						</view>
+						<view class="right">
+							<text class="name"
+								style=" font-size: 16px;color: #282828;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{{item.title}}</text>
+							<view class="teacher" style="font-size: 14px;color:#6e6e6e;line-height: 80rpx;">
+								{{item.nickname}}</view>
+							<view class="fb">
+								<view class="lesson" style="font-size: 14px;color: #7a7a7a;">
+									<image src="../../static/time.png"></image>{{item.count}}课时
+								</view>
+								<!-- <view class="read">{{item.read}}人阅读</view> -->
+							</view>
 						</view>
 					</view>
 				</view>
 			</view>
-			</view>
 			<view class="lessonlist">
-			<view class="tit" style="padding-left: 20px;background:#f4f4f4;position: relative;">猜你喜欢<navigator  open-type="switchTab" url="/pages/tabbar/study" class="text" >更多
-			<image style="width: 36rpx;height: 36rpx;" src="/static/00.png"></image>
-			</navigator></view>
-		<view class="olist">
-			<view class="part" v-for="(item, index) in cai_like" :key="index" @click="toDetail(item.id)">
-				<view class="imgbox" style="height:210rpx"><image mode="scaleToFill" :src="item.photo"></image></view>
-				<view class="right">
-					<text class="name" style="margin-bottom: 10rpx; font-size: 16px;color: #282828;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{{item.title}}</text>
-					<view class="teacher" style="margin-bottom:10rpx; 14px;color:#6e6e6e;line-height: 80rpx;">{{item.nickname}}</view>
-					<view class="fb">
-						<view class="lesson" style="font-size: 14px;color: #7a7a7a;"><image src="../../static/time.png"></image>{{item.count}}课时</view>
-						<!-- <view class="read">{{item.read}}人阅读</view> -->
+				<view class="tit" style="padding-left: 20px;background:#f4f4f4;position: relative;">猜你喜欢<navigator
+						open-type="switchTab" url="/pages/tabbar/study" class="text">更多
+						<image style="width: 36rpx;height: 36rpx;" src="/static/00.png"></image>
+					</navigator>
+				</view>
+				<view class="olist">
+					<view class="part" v-for="(item, index) in cai_like" :key="index" @click="toDetail(item.id)">
+						<view class="imgbox" style="height:210rpx">
+							<image mode="scaleToFill" :src="item.photo"></image>
+						</view>
+						<view class="right">
+							<text class="name"
+								style="margin-bottom: 10rpx; font-size: 16px;color: #282828;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{{item.title}}</text>
+							<view class="teacher" style="margin-bottom:10rpx; 14px;color:#6e6e6e;line-height: 80rpx;">
+								{{item.nickname}}</view>
+							<view class="fb">
+								<view class="lesson" style="font-size: 14px;color: #7a7a7a;">
+									<image src="../../static/time.png"></image>{{item.count}}课时
+								</view>
+								<!-- <view class="read">{{item.read}}人阅读</view> -->
+							</view>
+						</view>
 					</view>
 				</view>
 			</view>
 		</view>
-		</view>
+		<view class="wrap fc"  v-if="buywrap">
+			<view class="wrapbox fc">
+				<view class="tit"><text></text><text style="color: #333;font-size: 30rpx;">支付</text>
+					<image class="retu" @click="retu" src="../../static/close.png"></image>
+				</view>
+				<view class="tips"><text style="color: #333;font-size: 32rpx;">观看直播需要支付{{price}}元</text></view>
+				<radio-group @change="radioChange" style="width: 100%;">
+					<view class="fr change" >
+						<label class="paybox fc">
+							<image style="width: 110rpx;height: 110rpx;" src="../../static/wxpay.png"></image>
+							<radio value="1" checked="true" />
+						</label>
+						<label class="paybox fc">
+							<image style="width: 110rpx;height: 110rpx;" src="../../static/ali.png"></image>
+							<radio value="2" />
+						</label>
+						<label class="paybox fc">
+							<image src="../../static/gift/zs.png" style="width: 110rpx;height: 110rpx;"></image>
+							<radio value="3" />
+						</label>
+						
+					</view>
+				</radio-group>
+				<view class="buybtn" @click="topay"><text style="color: #fff;font-size: 30rpx;">购买</text></view>
+			</view>
 		</view>
 	</view>
 </template>
 
 <script>
-    import util from '@/util/util.js';
+	import util from '@/util/util.js';
 	export default {
 		data() {
 			var that = this
 			return {
-				wgtVer:'',
-				ischange:true,//顶部颜色是否渐变
-				bannH:'200',
-				nowColor:'',
-				img_src:that.IMG_URL,
-				src:that.REQUEST_URL,
-				banners:[],
-				classify:[],
-				list:[],
-				zhibo:[],
-				cai_like:[],
-				zhuanqu:[],
-				daka:[],
-				tuijian_daka:[],
-				jingxuan:[],
-				shops:[],
-				shopindex:""
+				wgtVer: '',
+				ischange: true, //顶部颜色是否渐变
+				bannH: '200',
+				nowColor: '',
+				img_src: that.IMG_URL,
+				src: that.REQUEST_URL,
+				banners: [],
+				classify: [],
+				list: [],
+				zhibo: [],
+				cai_like: [],
+				zhuanqu: [],
+				daka: [],
+				tuijian_daka: [],
+				jingxuan: [],
+				shops: [],
+				shopindex: "",
+				nowLiveId: 0, //当前直播间ID
+				buywrap: false,
+				price: '',
+				payType: '1',
 			}
 		},
-		onPullDownRefresh(){
-			var that =this
+		onPullDownRefresh() {
+			var that = this
 			uni.showLoading();
 			uni.request({
-				url:that.REQUEST_URL +　'index.php/api/index/lists',
-				method:'POST',
-				data:{},
-				success:res=>{
+				url: that.REQUEST_URL + 'index.php/api/index/lists',
+				method: 'POST',
+				data: {},
+				success: res => {
 					console.log(res)
 					uni.hideLoading();
-						that.banners =res.data.data.banner
-						that.classify = res.data.data.category
-						that.list =  res.data.data.title
-						that.cai_like = res.data.data.cai_like
-						that.zhuanqu = res.data.data.zhuanqu
-						that.tuijian_daka = res.data.data.tuijian_daka
-						that.daka = res.data.data.daka
-						that.jingxuan = res.data.data.jingxuan
-						that.shops = res.data.data.shops
-						console.log(that.banners)
+					that.banners = res.data.data.banner
+					that.classify = res.data.data.category
+					that.list = res.data.data.title
+					that.cai_like = res.data.data.cai_like
+					that.zhuanqu = res.data.data.zhuanqu
+					that.tuijian_daka = res.data.data.tuijian_daka
+					that.daka = res.data.data.daka
+					that.jingxuan = res.data.data.jingxuan
+					that.shops = res.data.data.shops
+					console.log(that.banners)
 				}
 			})
 			uni.request({
-				url:that.REQUEST_URL + 'index.php/api/live/live_lists',
-				method:"POST",
-				data:{},
-				success(res){
+				url: that.REQUEST_URL + 'index.php/api/live/live_lists',
+				method: "POST",
+				data: {},
+				success(res) {
 					uni.hideLoading();
 					that.zhibo = res.data.data
-					console.log('11',that.zhibo)
+					console.log('11', that.zhibo)
 					uni.stopPullDownRefresh()
 				}
 			})
 		},
 		onShow() {
-			var that=this
+			var that = this
 			// // #ifdef H5
 			// if (uni.getStorageSync('user').id) {
 			// 	uni.request({
@@ -238,12 +303,12 @@
 			that.getUser()
 			console.log('-----')
 			uni.getSystemInfo({
-			　　success: function(res) { // res - 各种参数
-			　　    let info = uni.createSelectorQuery().select(".bgtop");
-			　　　  　info.boundingClientRect(function(data) { //data - 各种参数
-						that.bannH=data.height
-			　　    }).exec()
-			       }
+				success: function(res) { // res - 各种参数
+					let info = uni.createSelectorQuery().select(".bgtop");
+					info.boundingClientRect(function(data) { //data - 各种参数
+						that.bannH = data.height
+					}).exec()
+				}
 			});
 			// if (!uni.getStorageSync('user').id) {
 			// 	uni.reLaunch({
@@ -252,216 +317,365 @@
 			// 	return false
 			// } 
 		},
-		onPageScroll(e){
-			if(e.scrollTop>Number(this.bannH)){
-				this.ischange=false
-			}else{
-				this.ischange=true
+		onPageScroll(e) {
+			if (e.scrollTop > Number(this.bannH)) {
+				this.ischange = false
+			} else {
+				this.ischange = true
 			}
 		},
 		onLoad() {
-			
 			uni.showLoading();
-            if (!util.isLogin()) {
-                uni.showToast({
-                    title:'登录过期,请重新登录',
-                    icon:'none',
-                    duration:2000,
-                    complete(){
-                        setTimeout(()=>{
-                            uni.reLaunch({
-                                url:'/pages/login'
-                            })
-                        },1000)
-                    }
-                })
-            }
-			
+			if (!util.isLogin()) {
+				uni.showToast({
+					title: '登录过期,请重新登录',
+					icon: 'none',
+					duration: 2000,
+					complete() {
+						setTimeout(() => {
+							uni.reLaunch({
+								url: '/pages/login'
+							})
+						}, 1000)
+					}
+				})
+			}
+
 			var that = this;
-			
+
 			uni.showLoading();
 			uni.request({
-				url:that.REQUEST_URL +　'index.php/api/index/lists',
-				method:'POST',
-				data:{},
-				success:res=>{
+				url: that.REQUEST_URL + 'index.php/api/index/lists',
+				method: 'POST',
+				data: {},
+				success: res => {
 					console.log(res)
 					uni.hideLoading();
-						that.nowColor=res.data.data.banner[0].background_color
-						that.banners =res.data.data.banner
+					that.nowColor = res.data.data.banner[0].background_color
+					that.banners = res.data.data.banner
+					that.classify = res.data.data.category
+					that.list = res.data.data.title
+					that.cai_like = res.data.data.cai_like
+					that.zhuanqu = res.data.data.zhuanqu
+					that.tuijian_daka = res.data.data.tuijian_daka
+					that.daka = res.data.data.daka
+					that.jingxuan = res.data.data.jingxuan
+					that.shops = res.data.data.shops
+					that.shops_id = res.data.data.shops_id
+					console.log(that.banners)
+					var shop_id = res.data.data.shops_id
+					for (var i = 0; i < that.classify.length; i++) {
+						if (shop_id == that.classify[i].id) {
+							that.shopindex = i
+						}
+					}
+				}
+			})
+			uni.request({
+				url: that.REQUEST_URL + 'index.php/api/live/live_lists',
+				method: "POST",
+				data: {},
+				success(res) {
+					uni.hideLoading();
+					that.zhibo = res.data.data
+					console.log('11', that.zhibo)
+				}
+			})
+
+
+		},
+		methods: {
+
+			deal(con) {
+				return con.replace(/\n/g, '')
+			},
+			// deal(id){
+			// 	return this.url+id
+			// },
+			bannChange(e) {
+				var that = this
+				// console.log(e)
+				// 如果ischange，停留在上面 则 全部变色
+				// 否则 导航栏部分的颜色 白色 字黑色
+				this.nowColor = this.banners[e.detail.current].background_color
+
+
+
+			},
+			getUser() {
+				var that = this;
+				var uid = uni.getStorageSync('user')['id'];
+				uni.request({
+					url: this.REQUEST_URL + '/index.php/api/user/member',
+					method: 'POST',
+					data: {
+						uid: uid
+					},
+					header: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					success: res => {
+						if (res.data.datas.member_status == 0) {
+							uni.redirectTo({
+								url: '../xufei'
+							})
+						}
+					}
+				});
+			},
+
+
+			toTeacher(id) {
+				console.log(id)
+				uni.navigateTo({
+					url: '/pages/teacher_detail?did=' + id
+				})
+			},
+			toclassall() {
+
+				uni.navigateTo({
+					url: '/pages/classall'
+				})
+			},
+			//进入直播间
+			Tozhibo(id) {
+				console.log('直播间id'+id)
+				this.nowLiveId = id
+				this.buywrap = true
+			},
+			//检查支付
+			tocheck() {
+				var user = uni.getStorageSync('user')
+				let data = {
+					uid: user.id,
+					lid: this.nowLiveId,
+				}
+				this.$H.post('/live/checkLivePay', data).then(res => {
+					console.log(res)
+					if (res.code == 500) {
+						this.price = res.datas
+						console.log(res)
+						//若余额大于直播金额
+						if (this.price < user.balance) {
+							this.tocheckZs()
+						} else {
+							uni.showToast({
+								title: '钻石不足,请使用其他付款方式',
+								icon: 'none'
+							});
+						}
+					} else {
+						this.buywrap = false
+						uni.navigateTo({
+							url: '/pages/live/live?id=' + this.nowLiveId
+						})
+					}
+				}).catch(err => {
+					console.log(err);
+				})
+			},
+			//使用钻石支付
+			tocheckZs() {
+				var user = uni.getStorageSync('user')
+				let data = {
+					uid: user.id,
+					lid: this.nowLiveId,
+					pay_type: 3
+				}
+				this.$H.post('/pay/buyLive', data).then(res => {
+					console.log('使用余额付费了')
+					this.buywrap = false
+					uni.navigateTo({
+						url: '/pages/live/live?id=' + this.nowLiveId
+					})
+				}).catch(err => {
+					console.log(err);
+				})
+			},
+			//选择支付方式
+			radioChange(e) {
+				console.log(e.detail.value)
+				this.payType = e.detail.value;
+			},
+			//取消支付
+			retu() {
+				this.buywrap = false
+			},
+			//支付
+			topay() {
+				// uni.showLoading({
+				// 	title: '加载中……'
+				// })
+				// #ifdef APP-PLUS
+				switch (this.payType) {
+					case '1':
+						let data = {
+							uid:uni.getStorageSync('userId'),
+							lid:this.nowLiveId,
+							pay_type:2
+						}
+						this.$H.post('/pay/buylive',data
+						).then(res=>{
+							console.log(res)
+							uni.requestPayment({
+								provider: 'wxpay',
+								orderInfo: res,
+								success: function(res) {
+									uni.showToast({
+										title: '支付成功',
+										icon: 'none',
+										duration: 2000,
+										complete() {
+											setTimeout(()=>{
+												that.tocheck()
+											},1000)
+										}
+									})
+									console.log('success:' + JSON.stringify(res))
+								},
+								fail: function(err) {
+									console.log('fail:' + JSON.stringify(err));
+								}
+							});
+							console.log(JSON.stringify(res))
+							uni.hideLoading()
+						}).catch(err=>{
+							uni.hideLoading()
+							console.log(err);
+						})
+						break;
+					case '2':
+						let data2 = {
+							uid:uni.getStorageSync('userId'),
+							lid:this.nowLiveId,
+							pay_type:1
+						}
+						this.$H.post('/pay/buylive',data2
+						).then(res=>{
+							uni.requestPayment({
+								provider: 'alipay',
+								orderInfo: res,
+								success: function(res) {
+									uni.showToast({
+										title: '支付成功',
+										icon: 'none',
+										duration: 2000,
+										complete() {
+											setTimeout(()=>{
+												that.tocheck()
+											},1000)
+										}
+									})
+									console.log('success:' + JSON.stringify(res))
+								},
+								fail: function(err) {
+									console.log('fail:' + JSON.stringify(err));
+								}
+							});
+							console.log(JSON.stringify(res))
+							uni.hideLoading()
+						}).catch(err=>{
+							uni.hideLoading()
+							console.log(err);
+						})
+						break;
+					case '3':
+					
+						console.log('进来了')
+						this.tocheck()
+						break;
+					default:
+						break;
+				}
+				// #endif
+				
+				// #ifdef H5
+				// #endif
+			},
+			
+			toStudy() {
+				var that = this
+				console.log('222', that.shopindex)
+				uni.setStorage({
+					key: "study",
+					data: {
+						aid: that.shops_id,
+						aindex: that.shopindex,
+						bid: 0,
+						bindex: 0
+					}
+				})
+				uni.switchTab({
+					url: "/pages/tabbar/study"
+				})
+			},
+			tolesson(id, current) {
+				uni.setStorage({
+					key: "study",
+					data: {
+						aid: id,
+						aindex: current,
+						bid: 0,
+						bindex: 0
+					}
+				})
+				console.log(id)
+				uni.switchTab({
+					url: "/pages/tabbar/study"
+				})
+			},
+			toDetail1(id) {
+				console.log('课程id', id)
+				uni.navigateTo({
+					url: '/pages/detail?id=' + id + '&type=' + 2
+				})
+			},
+			toDetail(id) {
+				console.log('课程id', id)
+				uni.navigateTo({
+					url: '/pages/detail?id=' + id + '&type=' + 1
+				})
+			},
+			search(e) {
+				console.log(e.detail.value)
+				var that = this;
+				uni.showLoading();
+				uni.request({
+					url: that.REQUEST_URL + 'index.php/api/index/lists',
+					method: 'POST',
+					data: {
+						key: e.detail.value
+					},
+					success: res => {
+						console.log(res)
+						uni.hideLoading();
+						that.nowColor = res.data.data.banner[0].background_color
+						that.banners = res.data.data.banner
 						that.classify = res.data.data.category
-						that.list =  res.data.data.title
+						that.list = res.data.data.title
 						that.cai_like = res.data.data.cai_like
 						that.zhuanqu = res.data.data.zhuanqu
 						that.tuijian_daka = res.data.data.tuijian_daka
 						that.daka = res.data.data.daka
 						that.jingxuan = res.data.data.jingxuan
 						that.shops = res.data.data.shops
-						that.shops_id = res.data.data.shops_id
 						console.log(that.banners)
 						var shop_id = res.data.data.shops_id
-						for(var i=0 ; i<that.classify.length;i++){
-							if(shop_id ==that.classify[i].id ){
+						for (var i = 0; i < that.classify.length; i++) {
+							if (shop_id == that.classify[i].id) {
 								that.shopindex = i
 							}
 						}
-				}
-			})
-			uni.request({
-				url:that.REQUEST_URL + 'index.php/api/live/live_lists',
-				method:"POST",
-				data:{},
-				success(res){
-					uni.hideLoading();
-					that.zhibo = res.data.data
-					console.log('11',that.zhibo)
-				}
-			})
-			
-			
-		},
-		methods: {
-						
-			deal(con){
-			    return con.replace(/\n/g,'')
-			   },
-			// deal(id){
-			// 	return this.url+id
-			// },
-			bannChange(e){
-				var that=this
-				// console.log(e)
-				// 如果ischange，停留在上面 则 全部变色
-				// 否则 导航栏部分的颜色 白色 字黑色
-				this.nowColor=this.banners[e.detail.current].background_color
-				
-				
-				
-			},
-			getUser(){
-				var that=this;
-				var uid = uni.getStorageSync('user')['id'];
-				uni.request({
-				    url: this.REQUEST_URL + '/index.php/api/user/member',
-				    method: 'POST',
-				    data: {
-				        uid: uid
-				    },
-				    header: {
-				        'Content-Type': 'application/x-www-form-urlencoded'
-				    },
-				    success: res => {
-				       if(res.data.datas.member_status == 0){
-							uni.redirectTo({
-								url:'../xufei'
-							})
-				       }
-				    }
-				});
-			},
-			
-			
-			toTeacher(id){
-				console.log(id)
-				uni.navigateTo({
-					url:'/pages/teacher_detail?did='+id
-				})
-			},
-			toclassall(){
-				
-				uni.navigateTo({
-					url:'/pages/classall'
-				})
-			},
-			Tozhibo(id){
-				console.log(id)
-                uni.navigateTo({
-                    url:'/pages/live_detail?id=' + id
-                })
-			},
-			toStudy(){
-				var that = this
-				console.log('222',that.shopindex)
-				uni.setStorage({
-					key:"study",
-					data:{
-						aid:that.shops_id,
-						aindex:that.shopindex,
-						bid:0,
-						bindex:0
-					}
-				})
-				uni.switchTab({
-					url:"/pages/tabbar/study"
-				})
-			},
-			tolesson(id,current){
-				uni.setStorage({
-					key:"study",
-					data:{
-						aid:id,
-						aindex:current,
-						bid:0,
-						bindex:0
-					}
-				})
-				console.log(id)
-				uni.switchTab({
-					url:"/pages/tabbar/study"
-				})
-			},
-			toDetail1(id){
-				console.log('课程id',id)
-					uni.navigateTo({
-						url:'/pages/detail?id='+id+'&type='+2
-					})
-				},
-			toDetail(id){
-				console.log('课程id',id)
-				uni.navigateTo({
-					url:'/pages/detail?id='+id+'&type='+1
-				})
-			},
-			search(e){
-				console.log(e.detail.value)
-				var that = this;
-				uni.showLoading();
-				uni.request({
-					url:that.REQUEST_URL +　'index.php/api/index/lists',
-					method:'POST',
-					data:{
-						key:e.detail.value
-					},
-					success:res=>{
-						console.log(res)
-						uni.hideLoading();
-							that.nowColor=res.data.data.banner[0].background_color
-							that.banners =res.data.data.banner
-							that.classify = res.data.data.category
-							that.list =  res.data.data.title
-							that.cai_like = res.data.data.cai_like
-							that.zhuanqu = res.data.data.zhuanqu
-							that.tuijian_daka = res.data.data.tuijian_daka
-							that.daka = res.data.data.daka
-							that.jingxuan = res.data.data.jingxuan
-							that.shops = res.data.data.shops
-							console.log(that.banners)
-							var shop_id = res.data.data.shops_id
-							for(var i=0 ; i<that.classify.length;i++){
-								if(shop_id ==that.classify[i].id ){
-									that.shopindex = i
-								}
-							}
 					}
 				})
 				uni.request({
-					url:that.REQUEST_URL + 'index.php/api/live/live_lists',
-					method:"POST",
-					data:{},
-					success(res){
+					url: that.REQUEST_URL + 'index.php/api/live/live_lists',
+					method: "POST",
+					data: {},
+					success(res) {
 						uni.hideLoading();
 						that.zhibo = res.data.data
-						console.log('11',that.zhibo)
+						console.log('11', that.zhibo)
 					}
 				})
 			},
@@ -470,16 +684,18 @@
 </script>
 
 <style>
-	.content{
+	.content {
 		background-color: #fafafa;
 	}
-	.header{
+
+	.header {
 		padding: 30rpx 0 14rpx 0;
 		box-sizing: border-box;
 		position: relative;
 		z-index: 9;
 	}
-	.search{
+
+	.search {
 		margin: 0rpx auto;
 		width: 620rpx;
 		height: 64rpx;
@@ -490,37 +706,43 @@
 		padding: 0 26rpx;
 		box-sizing: border-box;
 	}
-	.search image{
+
+	.search image {
 		width: 36rpx;
 		height: 36rpx;
 		margin-right: 28rpx;
 	}
-	.search input{
+
+	.search input {
 		height: 64rpx;
 		width: 490rpx;
 		color: #333;
 		font-size: 28rpx;
 	}
-	
-	.banner{
+
+	.banner {
 		width: 90%;
 		margin: 0 auto;
 		height: 360rpx;
 	}
-	.banner .swiper{
+
+	.banner .swiper {
 		width: 100%;
 		height: 100%;
 	}
-	.swiper image{
+
+	.swiper image {
 		width: 100%;
 		height: 100%;
 	}
-	.classify{
+
+	.classify {
 		flex-wrap: wrap;
 		padding: 20rpx 30rpx;
 		box-sizing: border-box;
 	}
-	.classify .icon{
+
+	.classify .icon {
 		width: 20%;
 		display: flex;
 		flex-direction: column;
@@ -528,78 +750,90 @@
 		justify-content: center;
 		margin-top: 20rpx;
 	}
-	.classify .icon image{
+
+	.classify .icon image {
 		width: 86rpx;
 		height: 86rpx;
 	}
-	.classify .icon .text{
+
+	.classify .icon .text {
 		line-height: 60rpx;
 		font-size: 26rpx;
 	}
-	.livebann{
+
+	.livebann {
 		width: 100%;
 		/* height: 314rpx; */
 	}
-	.lessonlist{
+
+	.lessonlist {
 		background-color: #fff;
 	}
-	.lessonlist .tit{
+
+	.lessonlist .tit {
 		position: relative;
 		/* text-align: center; */
 		line-height: 110rpx;
 		/* margin-top: 10rpx; */
 		font-size: 38rpx;
 		color: #333;
-		font-weight:bold
+		font-weight: bold
 	}
-	
-	.lessonlist .tit{
+
+	.lessonlist .tit {
 		position: relative;
 		/* text-align: center; */
 		line-height: 110rpx;
 		/* margin-top: 10rpx; */
 		font-size: 38rpx;
 		color: #333;
-		font-weight:bold
+		font-weight: bold
 	}
-	.lessonlist .tit .text{
+
+	.lessonlist .tit .text {
 		margin-top: 2px;
 		position: absolute;
 		right: 36rpx;
 		top: 0;
 		height: 40rpx;
 		line-height: 40rpx;
-		top:35rpx;
+		top: 35rpx;
 		font-size: 22rpx;
 		color: #666;
 		display: flex;
 		align-items: center;
 	}
-	.lessonlist .tit image{
+
+	.lessonlist .tit image {
 		width: 30rpx;
 		height: 30rpx;
 	}
-	.olist{
+
+	.olist {
 		width: 690rpx;
 		margin: 20rpx auto;
 	}
-	.part{
+
+	.part {
 		display: flex;
 		margin-bottom: 30rpx;
 		padding-bottom: 20rpx;
 		border-bottom: 1rpx solid #cbcbcb;
 	}
-	.part .imgbox{
+
+	.part .imgbox {
 		width: 270rpx;
 		/* height: 210rpx; */
 		margin-right: 26rpx;
 		/* border-radius: 12rpx; */
 		overflow: hidden;
 	}
-	.part .right{
+
+	.part .right {
 		width: 390rpx;
 	}
-	.part .name{
+
+	.part .name {
 		font-size: 30rpx;
 		line-height: 44rpx;
 		color: #333;
@@ -608,36 +842,43 @@
 		-webkit-line-clamp: 2;
 		overflow: hidden;
 	}
-	.teacher{
+
+	.teacher {
 		font-size: 30rpx;
 		color: #333;
-/* 		margin-top: 20rpx;
+		/* 		margin-top: 20rpx;
 		margin-bottom: 40rpx; */
 	}
-	.part .lesson{
+
+	.part .lesson {
 		font-size: 28rpx;
 		color: #333;
 		display: flex;
 		align-items: center;
 	}
-	.part .lesson image{
+
+	.part .lesson image {
 		width: 30rpx;
 		height: 30rpx;
 		margin-right: 4rpx;
 	}
-	.part .read{
+
+	.part .read {
 		font-size: 26rpx;
 		color: #999;
 	}
-	.bgtop{
+
+	.bgtop {
 		width: 100%;
 		overflow: hidden;
 		position: relative;
 	}
-	.slow{
+
+	.slow {
 		transition: all 3s ease;
 	}
-	.bgcolor{
+
+	.bgcolor {
 		width: 1600rpx;
 		height: 1600rpx;
 		border-radius: 50%;
@@ -646,7 +887,8 @@
 		margin-left: -800rpx;
 		bottom: 50rpx;
 	}
-	.userNav{
+
+	.userNav {
 		height: 88rpx;
 		font-size: 32rpx;
 		font-weight: 700;
@@ -659,14 +901,95 @@
 		text-align: center;
 		color: #fff;
 	}
-	.font000{
-		color: #000!important;
+
+	.font000 {
+		color: #000 !important;
 	}
-	.positext{
-		font-size: 32rpx;color:#fff;position: absolute;
-		width: 100%;height: 60rpx;
-		line-height: 60rpx;text-align: center;left: 0;bottom: 0;
-		padding: 0 20rpx;box-sizing: border-box;
-		white-space: nowrap;overflow: hidden;text-overflow: ellipsis;
+
+	.positext {
+		font-size: 32rpx;
+		color: #fff;
+		position: absolute;
+		width: 100%;
+		height: 60rpx;
+		line-height: 60rpx;
+		text-align: center;
+		left: 0;
+		bottom: 0;
+		padding: 0 20rpx;
+		box-sizing: border-box;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.wrap {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		z-index: 99;
+		left: 0;
+		background-color: rgba(0, 0, 0, 0.8);
+		color: #fff;
+		padding: 30rpx;
+		box-sizing: border-box;
+	}
+	.buybtn {
+		width: 220rpx;
+		height: 72rpx;
+		border-radius: 36rpx;
+		background-color: #007AFF;
+		line-height: 72rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		margin-top: 20rpx;
+	}
+	
+	.retu {
+		width: 30rpx;
+		height: 30rpx;
+		margin-right: 20rpx;
+	
+	}
+	.fr {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: row;
+	}
+	.paybox image {
+		width: 160rpx;
+		height: 160rpx;
+		margin-bottom: 20rpx;
+	}
+	.change {
+		width: 100%;
+		box-sizing: border-box;
+	}
+	.fc {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+	}
+	.tit {
+		width: 650rpx;
+		display: flex;
+		height: 80rpx;
+		align-items: center;
+		flex-direction: row;
+		justify-content: space-between;
+		border-bottom-color: #d6d6d6;
+		border-bottom-width: 2rpx;
+		border-bottom-style: solid;
+		margin-bottom: 20rpx;
+	}
+	.wrapbox {
+		width: 650rpx;
+		background-color: #fff;
+		padding-bottom: 40rpx;
+		border-radius: 10rpx;
 	}
 </style>

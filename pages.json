@@ -28,6 +28,30 @@
 			"usingComponents": {}
 		},
 		{
+		    "path" : "pages/create-live/create-live",
+		    "style" : {
+				"app-plus":{
+					"titleNView":false
+				}
+			}
+		},
+		{
+		    "path" : "pages/live/live", 
+		    "style" : {
+				"app-plus":{
+					"titleNView":false
+				}
+			}
+		},
+		{
+		    "path" : "pages/liveroom/liveroom",
+		    "style" : {
+		    	"app-plus":{
+		    		"titleNView":false
+		    	}
+		    }
+		},
+		{
 			"path": "pages/tabbar/moments",
 			"style": {
 				"navigationBarTitleText": "发现",
@@ -202,12 +226,12 @@
 				"navigationBarTitleText": "发说说"
 			}
 		},
-		// {
-		//           "path" : "pages/tui",
-		//          "style": {
-		//          	"navigationStyle": "custom"
-		//          }
-		//       },
+		{
+		          "path" : "pages/tui",
+		         "style": {
+		         	"navigationStyle": "custom"
+		         }
+		      },
 		{
 			"path": "pages/live_detail",
 			"style": {

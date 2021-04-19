@@ -12,22 +12,46 @@ export default new Vuex.Store({
 		user:null,
 		token:null,
 		socket:null,
+		client_id:'',//websocket id
+		liveId:0,
+		type:''
 	},
 	actions:{
-		// 断开socket连接
-		closeSocket({ state,dispatch }){
+		//确定type为user
+		setType({state},data){
+			state.type = data
+		},
+		//修改liveId的值
+		setLiveId({ state },data){
+			state.liveId = data
+		},
+		//断开websocket
+		closeWebSocket({state,dispatch}){
 			if(state.socket){
 				state.socket.close()
+				console.log("WebSocket 已关闭")
 			}
 		},
-		// 连接socket
-		connectSocket({ state,dispatch }){
-			const S = io($C.socketUrl,{
-				query:{},
-				transports:['websocket'],
-				timeout:5000
+		//连接websocket
+		connectWebSocket({state,dispatch}){
+			var S = uni.connectSocket({
+			    url: $C.socketUrl,
+			    complete: ()=> {}
 			})
-			
+			//加入直播间
+			let joinLive = (e)=>{
+					let data = {
+						userid:uni.getStorageSync('user').id,
+						liveid:state.liveId,
+						client_id:state.client_id,
+						type:state.type
+					}
+					$H.post('/Websocket/bind', data).then(res => {
+						console.log(res)
+					}).catch(err => {
+						// console.log(err);
+					})
+			}
 			let onlineEvent = (e)=>{
 				uni.$emit('live',{
 					type:"online",
@@ -40,65 +64,71 @@ export default new Vuex.Store({
 					data:e
 				})
 			}
+			let systemEvent = (e)=>{
+				uni.$emit('live',{
+					type:"system",
+					data:e
+				})
+			}
 			let giftEvent = (e)=>{
 				uni.$emit('live',{
 					type:"gift",
 					data:e
 				})
 			}
-			
-			// 监听连接
-			S.on('connect',()=>{
-				console.log('已连接')
-				state.socket = S
-				// socket.io唯一链接id，可以监控这个id实现点对点通讯
-				const { id } = S
-				S.on(id,(e)=>{
-					console.log(e)
-					let d = e.data
-					if(d.action === 'error'){
-						let msg = d.payload
-						if(e.meta.notoast){
-							return
-						}
-						return uni.showToast({
-							title: msg,
-							icon: 'none'
-						});
-					}
+			//关注人数
+			let followEvent = (e)=>{
+				uni.$emit('live',{
+					type:"follow",
+					data:e
 				})
-				
-				// 监听在线用户信息
-				S.on('online',onlineEvent)
-				// 监听评论
-				S.on('comment',commentEvent)
-				// 监听礼物接收
-				S.on('gift',giftEvent)
-				
-			})
-			
-			// 移除监听事件
-			const removeListener = ()=>{
-				if(S){
-					S.removeListener('online',onlineEvent)
-					S.removeListener('comment',commentEvent)
-					S.removeListener('gift',giftEvent)
-				}
 			}
-			
+			// 监听连接成功 与后端操作在这
+			S.onOpen(()=>{
+				console.log('已连接 WebSocket ')
+				state.socket = S //方便其他页面进行使用
+				//S.send()用来发送  S.onMessage用来接受
+				S.onMessage((e)=>{
+					state.client_id = JSON.parse(e.data).client_id
+					joinLive()
+					//1 弹幕  2礼物  3系统消息  4在线人数
+					switch (JSON.parse(e.data).type) {
+						case '1':
+							commentEvent(JSON.parse(e.data))
+							break;
+						case '2':
+							giftEvent(JSON.parse(e.data))
+							break;
+						case '3':
+							systemEvent(JSON.parse(e.data))
+							break;
+						case '4':
+							onlineEvent(JSON.parse(e.data))
+							break;
+						case '5':
+							followEvent(JSON.parse(e.data))
+							break;
+						default:
+							break;
+					}
+					
+				})
+			})
 			// 监听失败
-			S.on('error',()=>{
-				removeListener()
-				state.socket = null
-				console.log('连接失败')
+			S.onError((err)=>{
+				console.log(err)
+				// removeListener()
+				state.socket = null //需要把它设为null因为没有连接了
+				console.log(' WebSocket 连接失败')
 			})
 			// 监听断开
-			S.on('disconnect',()=>{
-				removeListener()
-				state.socket = null
-				console.log('已断开')
+			S.onClose(()=>{
+				// removeListener()
+				state.socket = null //需要把它设为null因为没有连接了
+				console.log(' WebSocket 连接断开')
 			})
 		},
+		
 		authMethod({ state },callback){
 			if(!state.token){
 				uni.showToast({

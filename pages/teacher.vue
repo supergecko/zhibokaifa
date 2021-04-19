@@ -56,11 +56,33 @@
 			}
 		},
 		methods: {
+			//开始直播
 			start_live(){
                 if (this.live_id) {
-                    uni.navigateTo({
-                        url:'/pages/tui?id=' + this.live_id
-                    }) 
+                    // uni.navigateTo({
+                    //     url:'/pages/tui?id=' + this.live_id
+                    // }) 
+					let data = {
+						user_id:uni.getStorageSync('user').id,
+					}
+					this.$H.post('/live/tuila', data).then(res => {
+						console.log(res)
+						if (res.code == 0){
+							uni.showToast({
+							    title:res.msg,
+							    icon:'none'
+							})
+						} else {
+							uni.navigateTo({
+								url: `./liveroom/liveroom?data=${encodeURIComponent(JSON.stringify(res))}`,
+							})
+						}
+						// uni.navigateTo({
+						// 	url: `./liveroom/liveroom?data=${JSON.stringify(res)}`,
+						// })
+					}).catch(err => {
+						console.log(err);
+					})
                 } else {
                     uni.showToast({
                         title:'请先设置直播',
@@ -157,7 +179,7 @@
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     success(res){
-                        console.log(res);
+                        // console.log(res);
                         if (res.data.code == 1) {
                             if (res.data.data) {
                                 that.title = res.data.data.title;

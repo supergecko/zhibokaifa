@@ -23,7 +23,7 @@
             <view class="usertime" v-if="!userinfo.member_status" @click="toxufei">会员已到期，去续费&gt;</view>
             <!-- <view class="usertime" @click="">已到期，去续费&gt;</view> -->
 			<view style="display: flex;align-items: center;position: absolute;bottom: 46rpx;left: 70rpx;">
-				<image src="../../static/wallet/zs.png" style="width: 32rpx;height: 32rpx;"></image>
+				<image src="../../static/gift/zs.png" style="width: 32rpx;height: 32rpx;"></image>
 				<text style="font-size: 30rpx;color: #FFFFFF;margin-top: -6rpx;margin-left: 6rpx;">{{balance}}</text>
 			</view>
         </view>
@@ -67,7 +67,7 @@
                 <image src="../../static/enter/i7.png"></image>
                 <text>检查更新</text>
             </view>
-            <view class="part" @click="goLive">
+            <view class="part" @click="isPlayLive">
                 <image src="../../static/enter/i8.png"></image>
                 <text>讲师入口</text>
             </view>
@@ -94,6 +94,32 @@
 			that.getUser()
 		},
         methods: {
+			//是否能直播
+			isPlayLive(){
+				let data = {
+					uid:uni.getStorageSync('user').id,
+				}
+				this.$H.post('/user/apply_live', data).then(res => {
+					console.log(res.data)
+					if (res.data.status ==0){
+						uni.showToast({
+							title: '请耐心等待后台工作人员审核',
+							icon: 'none'
+						});
+					} else if (res.data.status == 1) {
+						uni.navigateTo({
+						    url:'/pages/teacher'
+						})
+					} else {
+						uni.showToast({
+							title: res.data.content,
+							icon: 'none'
+						});
+					}
+				}).catch(err => {
+					// console.log(err);
+				})
+			},
 			getUser(){
 				var that=this;
 				var uid = uni.getStorageSync('user')['id'];
@@ -116,6 +142,8 @@
 						})
 				        if (res.data.code == 200) {
 				            that.userinfo = res.data.datas;
+							console.log('用户信息')
+							console.log(that.userinfo)
 				        } else {
 				            uni.showToast({
 				                title: res.data.message,
@@ -165,6 +193,9 @@
                     uni.navigateTo({
                         url:'/pages/teacher'
                     })
+					// uni.navigateTo({
+					//     url:'/pages/create-live/create-live'
+					// })
                 } else {
                     uni.showToast({
                         title:'权限不足',

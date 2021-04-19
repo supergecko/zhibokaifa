@@ -285,6 +285,7 @@
 .text-hover-dark{ color: #121416;}
 .text-body { color: #212529;}
 .text-muted { color: #6c757d;}
+.text-tip {color:#A0A0A0}
 /* 浅灰色 */
 .text-light-muted { color: #A9A5A0;}
 .text-light-black { color: rgba(0, 0, 0, 0.5);}
@@ -308,9 +309,12 @@
 .bg-dark { background-color: #343a40;}
 .bg-hover-dark { background-color: #1d2124;}
 .bg-white { background-color: #ffffff;}
+.bg-black { background-color: #000000;}
 .bg-transparent { background-color: transparent;}
 /* 边框 */
-.border { border-width: 1rpx;border-style: solid;border-color: #dee2e6;}
+.border { border-width: 1rpx;border-style: solid;border-color: #88BDE2;}
+.bg-blue {background: #88BDE2;}
+.text-blue{color: #88BDE2;}
 .border-top {
   border-top-width: 1rpx;
   border-top-style: solid;

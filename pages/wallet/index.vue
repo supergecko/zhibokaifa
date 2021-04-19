@@ -8,16 +8,16 @@
 						<image src="../../static/wallet/zs.png" style="width: 32rpx;height: 32rpx;margin-top: 10rpx;"></image>
 						<text style="font-size: 30rpx;">钻石余额(个)</text>
 					</view>
-					<view class="numberText">{{balance}}</view>
+					<view class="numberText">{{zsBalance}}</view>
 					
-					<view class="checkBtn"  @click="goTo(`../recharge/index?balance=${balance}`)">
+					<view class="checkBtn"  @click="goTo(`../recharge/index?balance=${zsBalance}`)">
 						充值
 					</view>
 				</view>
 			</view>
 		</view>
 		
-		<view class="itemWarp">
+		<view class="itemWarp" v-if="isTeacher">
 			<view>
 				<view class="itemTitle">我的收益</view>
 				<view class="itemOne itemTwo">
@@ -41,7 +41,10 @@
 		data() {
 			return {
 				screenHeight:0,
-				balance:0 //钻石/收益
+				zsBalance:0 ,//钻石
+				balance:0,//收益
+				zsbl: 0, //钻石和金额比例
+				isTeacher:false//用户类型
 			}
 		},
 		// 按钮监听函数
@@ -53,7 +56,7 @@
 			
 		},
 		onShow() {
-			this.getUser()
+			this.getBl()
 		},
 		methods: {
 			goTo(url){
@@ -61,15 +64,34 @@
 					url: url 
 				});
 			},
+			//获取余额
 			getUser(){
 				let uid = uni.getStorageSync('userId')
 				let data = {uid}
 				this.$H.post('/user/member', data).then(res => {
-					this.balance = res.datas.balance
+					this.zsBalance = res.datas.balance
+					console.log(typeof(res.datas.group_status))
+					console.log(res.datas.group_status)
+					if (res.datas.group_status == 0) {
+						this.isTeacher = false
+					} else {
+						this.isTeacher = true
+					}
+					this.balance = this.zsBalance * this.zsbl
 				}).catch(err => {
 					console.log(err);
 				})
-			}
+			},
+			//获取当前钻石和现金兑换比例
+			getBl() {
+				let data = {}
+				this.$H.post('/user/diamond_price', data).then(res => {
+					this.zsbl = res.data.true_price
+					this.getUser()
+				}).catch(err => {
+					console.log(err);
+				})
+			},
 		}
 	}
 </script>

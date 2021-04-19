@@ -2,6 +2,7 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
+			// this.$store.dispatch('connectWebSocket')
 			var that = this;
 			const domModule = weex.requireModule('dom')
 			domModule.addRule('fontFace', {
@@ -53,7 +54,6 @@
 				});
 			});
 			// 获取当前版本号
-			
 		},
 		onShow: function() {
 			console.log('App Show')

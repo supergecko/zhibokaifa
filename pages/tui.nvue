@@ -204,6 +204,7 @@
 			// 	});
 			// }
 			// #endif
+			console.log(that.id)
             uni.request({
                 url:that.appurl +'index.php/api/live/tuila',
                 method:'post',
@@ -215,6 +216,7 @@
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 success(result){
+					console.log(result)
                     if (result.data.code == 1) {
                         that.url = result.data.data.push_url;
                         that.context = uni.createLivePusherContext('livePusher', that);
